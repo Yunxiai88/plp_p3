@@ -6,8 +6,8 @@ this file will show you how to use BERT with the huggingface PyTorch library to 
 # Training
 We use pre-trained weights as a starting point to train our own annotationed dataset.
 
-# Train a new model starting from pre-trained BERT model (BertForSequenceClassification)
-Pls refer to Sentiment-Mining.ipynb for more details
+## Train a new model starting from pre-trained BERT model
+Pls refer to Sentiment-Mining.ipynb for more details(BertForSequenceClassification).
 
 ## Requirements
 Python 3.7, torch, transformers and other common packages listed in `requirements.txt`.
