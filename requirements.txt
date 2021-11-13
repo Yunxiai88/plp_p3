@@ -1,9 +1,5 @@
-ipython
-keras==2.2.4
-mrcnn
-h5py<3.0.0
-scikit-image
-tensorflow==1.15
-opencv-python
 pandas
 flask
+numpy
+matplotlib
+transformers
