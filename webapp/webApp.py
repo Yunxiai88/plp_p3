@@ -2,9 +2,11 @@ import os
 import json
 import argparse
 import csv
+import time
 import pandas as pd
 
-from flask import render_template, jsonify
+from werkzeug.utils import secure_filename
+from flask import render_template, jsonify, flash
 from flask import Flask, request, redirect, send_from_directory
 
 import sys
@@ -13,16 +15,23 @@ path = pathlib.Path(__file__)
 sys.path.append(os.path.join(str(path.parent.parent), "inference/"))
 
 from sentiment import Sentiment
-from process import process_review
+from process import single_process, batch_process
 
 # initialize a flask object
 app = Flask(__name__)
-ROWS_PER_PAGE = 10
-database = []
-configData = []
-length = 0
+app.config['SECRET_KEY'] = "plpsystemkey"
+app.config['UPLOAD_FOLDER'] = 'upload'
+app.config['SESSION_TYPE'] = 'filesystem'
 
+ALLOWED_EXTENSIONS = {'csv'}
+
+database = []
+length = 0
 sentiment = Sentiment()
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/error")
 def error():
@@ -31,9 +40,10 @@ def error():
 @app.route("/")
 def index():
     database = []
-    with open('webapp/data/progress.csv','r') as data:
+    with open('webapp/data/progress.csv','r', encoding="utf8") as data:
         reader = csv.reader(data)
         next(reader, None)  # skip the headers
+
         for line in reader:
             database.append(line)
 
@@ -55,23 +65,42 @@ def base_static(filename):
 #----------------------------Functions--------------------------------
 #---------------------------------------------------------------------
 @app.route('/upload',methods = ['POST', 'GET'])
-def config():
+def upload():
     if request.method == "POST":
-        # upload file
-        with open ('webapp/data/reference.csv','w') as f:
-            writer = csv.writer(f)
-            writer.writerows(updates)
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect("/")
+        
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')  
+            return redirect("/")
 
-        return redirect("/")
-
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            
+            # process batch file
+            result = batch_process(sentiment, filename)
+            if result == "success":
+                flash('file uploaded and process successful.')
+            else:
+                flash('file uploaded or process failed.')
+            return redirect("/")
+        else:
+            flash('No allow file format')
+            return redirect("/")
 
 @app.route('/process', methods = ['POST', 'GET'])
 def process():
     if request.method == "POST":
         review = request.form['review']
 
-        # Get Polarity
-        polarity = process_review(sentiment, review.strip())
+        # Get Polarity for single review
+        polarity = single_process(sentiment, review.strip())
 
         output = {"data": polarity}
         return jsonify(output)

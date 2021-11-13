@@ -7,12 +7,11 @@ if os.environ.get('DISPLAY','') == '':
     mpl.use('Agg')
 
 import sys
-import glob
 import pathlib
 import numpy as np
-import pandas as pd
-
+import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.metrics import matthews_corrcoef
 
 import torch
 from transformers import BertTokenizer, BertForSequenceClassification
@@ -28,7 +27,7 @@ class Sentiment:
         self.device = get_device()
         self.model, self.tokenizer = load_model(self.device)
 
-    def analyze(self, data, labels=None):
+    def analyze(self, data, labels=[]):
         print("sentiment analysis start...")
 
         # Generate Input Data
@@ -43,9 +42,11 @@ class Sentiment:
         # Run Analyze
         predictions , true_labels = [], []
 
+        step = 1
         for batch in dataloader:
-            batch = tuple(t.to(self.device) for t in batch)
+            print("processing for batch: " + str(step))
 
+            batch = tuple(t.to(self.device) for t in batch)
             if len(batch) == 3:
                 b_input_ids, b_input_mask, b_labels = batch
             else:
@@ -61,15 +62,12 @@ class Sentiment:
             if len(batch) == 3:
                 label_ids = b_labels.to('cpu').numpy()
                 true_labels.append(label_ids)
+            
+            step = step + 1
+        
+        print("sentiment analysis end...")
 
         return predictions, true_labels
-
-def load_data(filename):
-    data_file = os.path.join(str(path.parent.parent)+"/upload/", filename)
-    
-    df = pd.read_csv(data_file)
-
-    return df
 
 def load_model(device):
     print("loading model start..")
@@ -127,7 +125,7 @@ def generate_input(input_data, input_labels, tokenizer):
   input_ids = torch.cat(input_ids, dim=0)
   attention_masks = torch.cat(attention_masks, dim=0)
   
-  if input_labels:
+  if len(input_labels):
     labels = torch.tensor(input_labels)
     return TensorDataset(input_ids, attention_masks, labels)
   else:
@@ -146,7 +144,7 @@ def total_accuracy(predictions, true_labels):
 
     print("Overall accuracy for test set:", total_accuracy/len(predictions))
 
-def save_mcc(fileName, predictions, true_labels):
+def save_mcc(predictions, true_labels):
     matthews_set = []
     pred_labels = []
     # Evaluate each test batch using Matthew's correlation coefficient
@@ -167,9 +165,15 @@ def save_mcc(fileName, predictions, true_labels):
         matthews_set.append(matthews)
 
     # Save Image
+    sns.set(style='darkgrid')
+    sns.set(font_scale=1.5)
+    plt.rcParams["figure.figsize"] = (12,6)
+    
     plt.title('MCC Score per Batch')
     plt.ylabel('MCC Score (-1 to +1)')
     plt.xlabel('Batch #')
+
+    ax = sns.barplot(x=list(range(len(matthews_set))), y=matthews_set, ci=None)
 
     mcc_file = str(path.parent.parent) + "/webapp/data/img/sentiment_mcc.jpg"
     plt.savefig(mcc_file)

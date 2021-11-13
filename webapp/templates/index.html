@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% for message in get_flashed_messages() %}
+    <div class="alert alert-info">
+    {{ message }}
+    </div>
+{% endfor %}
+
 <div class="main_content">
     <div class="container custom-contain">
         <div class="row"> &nbsp; </div>
@@ -88,7 +95,7 @@
                             <th class="th-sm">Review</th>
                             <th class="th-sm">Topic</th>
                             <th class="th-sm">Sentiment</th>
-                            <th class="th-sm">Score</th>
+                            <th class="th-sm">Predicted</th>
                         </tr>
                     </thead>
                     <tbody>
