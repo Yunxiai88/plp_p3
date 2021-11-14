@@ -1,5 +1,6 @@
 import os
 import logging
+import pandas as pd
 import matplotlib as mpl
 logger = logging.getLogger('inference')
 if os.environ.get('DISPLAY','') == '':
@@ -14,6 +15,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import matthews_corrcoef
 
 import torch
+from nltk import FreqDist
 from transformers import BertTokenizer, BertForSequenceClassification
 
 from torch.utils.data import TensorDataset
@@ -168,7 +170,7 @@ def save_mcc(predictions, true_labels):
     sns.set(style='darkgrid')
     sns.set(font_scale=1.5)
     plt.rcParams["figure.figsize"] = (12,6)
-    
+
     plt.title('MCC Score per Batch')
     plt.ylabel('MCC Score (-1 to +1)')
     plt.xlabel('Batch #')
@@ -177,3 +179,68 @@ def save_mcc(predictions, true_labels):
 
     mcc_file = str(path.parent.parent) + "/webapp/data/img/sentiment_mcc.jpg"
     plt.savefig(mcc_file)
+
+def generate_summary():
+    print("generate summary for sentiment")
+    data_file = os.path.join(str(path.parent.parent)+"/webapp/data/", "progress.csv")
+    df1 = pd.read_csv(data_file)
+
+    reference_file = os.path.join(str(path.parent.parent)+"/webapp/data/", "googleplaystore.csv")
+    df2 = pd.read_csv(reference_file)
+
+    # merger with app store info
+    df2 = pd.merge(df1, df2[{"App", "Category", "Installs"}], on=['App'], how='left')
+
+    # top 10 apps
+    top10_apps_name = df2.sort_values('Installs', ascending=False)["App"].drop_duplicates().head(10).values
+
+    df = df2.loc[df2['App'].isin(top10_apps_name)]
+
+    sm = df.groupby(['App','Sentiment']).agg({'Sentiment': 'count'}).groupby(level=0).apply(lambda x : round(100 * x / float(x.sum()), 2))
+    #sm.columns = ['sentiment_mean']
+    #sm = sm.reset_index()
+
+    # Generate Sentiment Summary
+    ax = sm.unstack(fill_value=0).plot(kind='bar', title ="Top 10 Popular Apps", figsize=(15, 10), legend=True, fontsize=12)
+    ax.set_xlabel("App Name", fontsize=12)
+    ax.set_ylabel("Sentiment Percentage", fontsize=12)
+
+    sentiment = str(path.parent.parent) + "/webapp/data/img/sentiment.jpg"
+    plt.savefig(sentiment)
+
+    # Generate Summary for top 10 apps
+    '''
+    seq = 1
+    for app_name in top10_apps_name:
+        filename = "sentiment"+str(seq)+".jpg"
+        seq = seq + 1
+
+        df_topic = get_topic(sm, app_name)
+        
+        ## Setting figure, ax into variables
+        fig, ax = plt.subplots(figsize=(10,10))
+
+        ## Seaborn plotting using Pandas attributes + xtick rotation for ease of viewing
+        sns.barplot(y=df_topic.index, x=df_topic.values, orient='h', ax=ax)
+        
+        plt.title('Top 10 Topic')
+        plt.ylabel('Frequency')
+        plt.xlabel('Topic')
+        plt.xticks(rotation=30)
+
+        app_topic = str(path.parent.parent) + "/webapp/data/img/" + filename
+        plt.savefig(app_topic)
+    '''
+
+def get_topic(df, appname):
+    df_app = df.loc[df.App == appname]
+    df_app = df_app[df_app['Topic'].notnull()]
+
+    words = []
+    for x in df_app.Topic.values:
+        if x and x != "":
+            words = words + [y.strip() for y in x.split(",")]
+
+    fd_req = FreqDist(words).most_common(10)
+    fd_req = pd.Series(dict(fd_req))
+    return fd_req
