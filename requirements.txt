@@ -1,5 +1,8 @@
 sklearn
 seaborn
+nltk
+spacy
+gensim
 pandas
 flask
 numpy

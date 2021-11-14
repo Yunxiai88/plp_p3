@@ -40,7 +40,7 @@ def error():
 @app.route("/")
 def index():
     database = []
-    with open('webapp/data/progress.csv','r', encoding="utf8") as data:
+    with open('./webapp/data/progress.csv','r', encoding="utf8") as data:
         reader = csv.reader(data)
         next(reader, None)  # skip the headers
 
@@ -59,7 +59,12 @@ def index():
 
 @app.route('/data/<path:filename>')
 def base_static(filename):
-    return send_from_directory(app.root_path + '/data/', filename)
+    image_file = os.path.join(app.root_path + '/data/', filename)
+    # check whether file exist
+    if(os.path.isfile(image_file))
+        return send_from_directory(app.root_path + '/data/', filename)
+    else:
+        return send_from_directory(app.root_path + '/static/img', 'not_found.jpg')
 
 #---------------------------------------------------------------------
 #----------------------------Functions--------------------------------

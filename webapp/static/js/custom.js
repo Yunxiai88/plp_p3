@@ -6,7 +6,7 @@ $(document).ready(function () {
     });
     $('.dataTables_length').addClass('bs-select');
 
-    //graph selection
+    //topic selection
     $(".dropdown-topic a").click(function(){
         var selText = $(this).text();
         $("#topic-text").text(selText);
@@ -15,12 +15,13 @@ $(document).ready(function () {
         $("#img-a").attr("src", img);
     });
 
-    //date selection
+    //sentiment selection
     $(".drapdown-sentiment a").click(function(){
         var selText = $(this).text();
         $("#sentiment-text").text(selText);
 
-        var img = "/data/img/"+selText+".jpg";
+        var val = $(this).attr("value")
+        var img = "/data/img/"+val+".jpg";
         $("#img-b").attr("src", img);
     });
 
