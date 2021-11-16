@@ -11,7 +11,7 @@ $(document).ready(function () {
         var selText = $(this).text();
         $("#topic-text").text(selText);
 
-        var img = "/data/img/"+selText+".jpg";
+        var img = "/data/img/"+selText+".jpg?a=" + Math.random();
         $("#img-a").attr("src", img);
     });
 
@@ -21,7 +21,7 @@ $(document).ready(function () {
         $("#sentiment-text").text(selText);
 
         var val = $(this).attr("value")
-        var img = "/data/img/"+val+".jpg";
+        var img = "/data/img/"+val+".jpg?a=" + Math.random();
         $("#img-b").attr("src", img);
     });
 

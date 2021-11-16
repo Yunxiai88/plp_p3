@@ -61,8 +61,8 @@ def index():
 def base_static(filename):
     image_file = os.path.join(app.root_path + '/data/', filename)
     # check whether file exist
-    if(os.path.isfile(image_file))
-        return send_from_directory(app.root_path + '/data/', filename)
+    if os.path.isfile(image_file):
+        return send_from_directory(app.root_path + '/data', filename)
     else:
         return send_from_directory(app.root_path + '/static/img', 'not_found.jpg')
 

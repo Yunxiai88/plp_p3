@@ -196,7 +196,7 @@ def generate_summary():
 
     df = df2.loc[df2['App'].isin(top10_apps_name)]
 
-    sm = df.groupby(['App','Sentiment']).agg({'Sentiment': 'count'}).groupby(level=0).apply(lambda x : round(100 * x / float(x.sum()), 2))
+    sm = df.groupby(['App','Predicted']).agg({'Predicted': 'count'}).groupby(level=0).apply(lambda x : round(100 * x / float(x.sum()), 2))
     #sm.columns = ['sentiment_mean']
     #sm = sm.reset_index()
 
