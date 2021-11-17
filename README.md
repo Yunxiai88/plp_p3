@@ -1,4 +1,4 @@
-# plp_p3
+# GOOGLE PLAY STORE SENTIMENT ANALYSIS
 
 Team has prepared to deliver an end-to-end solution for these companies to leverage on. This web-based system allows users to upload a batch file to identify Positive and Negative sentiments from Play store review through sentiment analysis. System also can perform sentiment analysis for single review related to any app in google play store.
 This system also supports using topic modelling to understand which topic or feature customers like/dislike under different app categories.
