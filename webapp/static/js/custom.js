@@ -51,6 +51,10 @@ $(document).ready(function () {
                     if(response != 0) {
                         $('.loader').hide()
                         $('#uploadModal').modal('hide');
+                        
+                        // enable button
+                        $('#closeBtn').prop('disabled', false)
+                        $('#submitBtn').prop('disabled', false)
                     }
                 }
             }).fail(function(response) {

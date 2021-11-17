@@ -1,5 +1,6 @@
 sklearn
 seaborn
+torch
 nltk
 spacy
 gensim
