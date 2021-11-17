@@ -27,13 +27,7 @@ Please refer to [Training for Topic Modelling](https://github.com/Yunxiai88/plp_
     conda activate sentiment
     ```
 
-* 3. install dependent resources:   
-    ```
-    python -m nltk.downloader stopwords
-    python -m spacy download en_core_web_sm
-    ```
-
-* 4. In the virtual environment, Go to the project root folder and run below command to install packages:   
+* 3. In the virtual environment, Go to the project root folder and run below command to install packages:   
     ```
     pip install -r requirements.txt  
     ```
@@ -41,6 +35,11 @@ Please refer to [Training for Topic Modelling](https://github.com/Yunxiai88/plp_
      If any packages fail to install, try installing individually      
      If any errors, try to do this one more time to avoid packages being missed out   
 
+* 4. install dependent resources:   
+    ```
+    python -m nltk.downloader stopwords
+    python -m spacy download en_core_web_sm
+    ```
 
 ## Inference
 TODO
