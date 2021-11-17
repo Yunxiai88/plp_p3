@@ -1,6 +1,8 @@
 # plp_p3
 
-Google Play Store data which consist of user review and apps Info![image](https://user-images.githubusercontent.com/22022642/138711897-7eaea1ce-38b6-460e-b7c2-1be715db1665.png)
+Team has prepared to deliver an end-to-end solution for these companies to leverage on. This web-based system allows users to upload a batch file to identify Positive and Negative sentiments from Play store review through sentiment analysis. System also can perform sentiment analysis for single review related to any app in google play store.
+This system also supports using topic modelling to understand which topic or feature customers like/dislike under different app categories.
+
 
 # Technology
 * Python: 3.7
@@ -50,3 +52,9 @@ python webapp/webApp.py --ip 127.0.0.1 --port 8000
 ## References
 * [BERT Fine-Tuning Tutorial with PyTorch. (2021, Oct 12).](https://mccormickml.com/2019/07/22/BERT-fine-tuning/#a1-saving--loading-fine-tuned-model)
 * [Fine-tuning a BERT model. (2021, Oct 12).](https://www.tensorflow.org/text/tutorials/fine_tune_bert)
+* [Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
+* [Sentiment Analysis Using Neural Network](https://www.kaggle.com/atillasilva/sentiment-analysis-using-neural-network)
+* [Amazon Product Review Sentiment Analysis using BERT](https://www.analyticsvidhya.com/blog/2021/06/amazon-product-review-sentiment-analysis-using-bert/)
+* [Topic modeling visualization – How to present the results of LDA models](https://www.machinelearningplus.com/nlp/topic-modeling-visualization-how-to-present-results-lda-models/)
+* [Text Clustering using K-means](https://towardsdatascience.com/text-clustering-using-k-means-ec19768aae48)
+* [Understanding K-means Clustering in Machine Learning](https://towardsdatascience.com/understanding-k-means-clustering-in-machine-learning-6a6e67336aa1)
