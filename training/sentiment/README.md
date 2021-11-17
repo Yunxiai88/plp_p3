@@ -20,5 +20,5 @@ Python 3.7, torch, transformers and other common packages listed in `requirement
    ```
 
 # Getting Started
-* [Sentiment_Mining.ipynb](training/sentiment/Sentiment_Mining.ipynb). This notebook visualizes the different pre-processing steps
+* [Sentiment_Mining.ipynb](Sentiment_Mining.ipynb). This notebook visualizes the different pre-processing steps
 to prepare the training data and how to train the model step by steps.
